@@ -91,6 +91,7 @@ export class MessagesController {
   async sendTodayMessage(@GetUser() user: Users, @Res() res):Promise<String> {
     try{
       const notSendMessage = await this.messageService.notSendMessage(user)
+      console.log(notSendMessage)
       if(notSendMessage){
         const message = await this.messageService.sendTodayMessage(user)
         return res.status(HttpStatus.OK).json(message)
