@@ -28,50 +28,56 @@ export class MessageRepository {
     });
     this.todayKeyWord = presentkeyWord;
 
+    const message = await new this.MessageModel({
+      toUser: null,
+      fromUser: user._id,
+      keyword: this.todayKeyWord.content,
+      content,
+    });
+    return message.save();
+  }
+
+  async sendTodayMessage(user):Promise<String> {
+
+    const today = new Date().toDateString();
+    const presentkeyWord = await this.KeyWordModel.findOne({
+      updateDay: today,
+    });
+    this.todayKeyWord = presentkeyWord;
+
     if (user.generation == 0) {
       const toUser = await this.UsersModel.findOne({ generation: 1, state: 0 });
-      if (!toUser) {
-        //임시저장
-        const message = await new this.MessageModel({
-          toUser: null,
-          fromUser: user._id,
-          keyword: this.todayKeyWord.content,
-          content,
-        });
-        return message.save();
-      } else {
+      if(toUser) {
         //매칭 완료
-        const message = await new this.MessageModel({
-          toUser: toUser._id,
-          fromUser: user._id,
-          state: true,
-          keyword: this.todayKeyWord.content,
-          content,
-        });
-        return message.save();
+        await this.MessageModel.findOneAndUpdate({fromUser:user._id, keyWord:this.todayKeyWord.content},{
+          $set:{
+            toUser: toUser._id,
+            state: true
+          }
+        })
+        return '전송 완료';
+      }
+      else{
+        return '매칭 대기';
       }
     } else {
       const toUser = await this.UsersModel.findOne({ generation: 0, state: 0 });
-      if (!toUser) {
-        const message = await new this.MessageModel({
-          fromUser: user._id,
-          keyword: this.todayKeyWord.content,
-          content,
-        });
-        return message.save();
-      } else {
-        const message = await new this.MessageModel({
-          toUser: toUser._id,
-          state: true,
-          keyword: this.todayKeyWord.content,
-          content,
-        });
-        return message.save();
+      if (toUser) {
+        await this.MessageModel.findOneAndUpdate({fromUser:user._id, keyWord:this.todayKeyWord.content},{
+          $set:{
+            toUser: toUser._id,
+            state: true
+          }
+        })
+        return '전송 완료';
+      }
+      else{
+        return '매칭 대기';
       }
     }
   }
 
   async getTodayMessage(user: Users): Promise<Message> {
-      return await this.MessageModel.findOne({toUser: user._id}) // 받는 사람이 로그인한 유저인 경우
+    return await this.MessageModel.findOne({ toUser: user._id }); // 받는 사람이 로그인한 유저인 경우
   }
 }
