@@ -22,7 +22,6 @@ import { Users, UsersSchema } from 'src/users/schemas/users.schema';
       signOptions: { expiresIn: "60m" }
     }),
     MongooseModule.forFeature([{ name: Users.name, schema: UsersSchema }]),
-    UsersModule
   ],
   providers: [MessagesService, MessagesRepository],
   controllers: [MessagesController]
