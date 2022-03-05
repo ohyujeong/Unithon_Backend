@@ -42,7 +42,7 @@ export class KeyWordRepository {
   }
 
   //개발용 함수 (서버 계속 껐다 키니까 presenetKeyWord 변수 만들어서 임시적으로 오늘의 키워드 저장해주고 보여줌)
-  async findKeyWord(): Promise<any[]> {
+  async findKeyWord(user): Promise<any[]> {
     const today = new Date().toDateString();
     let result: any[] = [];
     const presentkeyWord = await this.KeyWordModel.findOne({
@@ -50,10 +50,16 @@ export class KeyWordRepository {
     });
     this.todayKeyWord = presentkeyWord;
     result.push(this.todayKeyWord);
-    /*유저에게 오늘 쪽지 왔는지 여부 확인
-    const message = await this.KeyWordModel.findOne({keyWord:this.todayKeyWord, toUser:user.nickname})
+    //유저에게 오늘 쪽지 왔는지 여부 확인
+    const message = await this.KeyWordModel.findOne({keyWord:this.todayKeyWord, toUser:user._id})
+    if(message){
+      await this.UsersModel.findByIdAndUpdate(user._id,{
+        $set:{
+          state: 1
+        }
+      })
+    }
     result.push(message)
-    */
     return result;
   }
 
@@ -71,38 +77,55 @@ export class KeyWordRepository {
     user,
     createMessageDto: CreateMessageDto,
   ): Promise<Message> {
-    createMessageDto.fromUser = user._id
+    const content = createMessageDto.content
 
     const today = new Date().toDateString();
     const presentkeyWord = await this.KeyWordModel.findOne({
       updateDay: today,
     });
     this.todayKeyWord = presentkeyWord;
-    createMessageDto.keyWord = this.todayKeyWord[0].content;
-    
+
     if(user.generation == 0){
       const toUser = await this.UsersModel.findOne({generation:1, state:0})
       if(!toUser){
-        const message = await new this.MessageModel(createMessageDto);
+        //임시저장
+        const message = await new this.MessageModel({
+          toUser:null,
+          fromUser:user._id,
+          keyword:this.todayKeyWord.content,
+          content
+        });
         return message.save();
       }
       else{
-        createMessageDto.toUser = toUser._id
-        createMessageDto.state = true
-        const message = await new this.MessageModel(createMessageDto);
+        //매칭 완료
+        const message = await new this.MessageModel({
+          toUser:toUser._id,
+          fromUser:user._id,
+          state:true,
+          keyword:this.todayKeyWord.content,
+          content
+        });
         return message.save();
       }
     }
     else{
       const toUser = await this.UsersModel.findOne({generation:0, state:0})
       if(!toUser){
-        const message = await new this.MessageModel(createMessageDto);
+        const message = await new this.MessageModel({
+          fromUser:user._id,
+          keyword:this.todayKeyWord.content,
+          content
+        });
         return message.save();
       }
       else{
-        createMessageDto.toUser = toUser._id
-        createMessageDto.state = true
-        const message = await new this.MessageModel(createMessageDto);
+        const message = await new this.MessageModel({
+          toUser:toUser._id,
+          state:true,
+          keyword:this.todayKeyWord.content,
+          content
+        });
         return message.save();
       }
     }

@@ -30,7 +30,7 @@ export class KeywordController {
   })
   async getKeyWord(@GetUser() user:Users, @Res() res): Promise<any[]> {
       console.log(user)
-      const result = await this.keywordService.findKeyWord();
+      const result = await this.keywordService.findKeyWord(user);
       const todayKeyWord = result[0]
       return res.json({todayKeyWord})
   }

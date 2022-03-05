@@ -52,9 +52,7 @@ export class Message {
     type: String,
     description: '쪽지의 주제',
   })
-  @Prop({
-    default: null,
-  })
+  @Prop()
   keyword: string;
 
   @ApiProperty({
