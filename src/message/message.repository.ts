@@ -19,17 +19,17 @@ export class MessageRepository {
 
   
   async getTodayMessage(user: Users): Promise<Message> {
-    return await this.MessageModel.findOneAndUpdate({ 
-      toUser: user._id,
-    }); // 받는 사람이 로그인한 유저인 경우
+    return await this.MessageModel.findOne({ toUser: user._id }); // 받는 사람이 로그인한 유저인 경우
   }
 
   async updateReadStatus(user: Users, message: Message) {    
-    return await this.MessageModel.updateOne({
+    return await this.MessageModel.findOneAndUpdate({
       toUser: user._id, 
       state:1, // 전송 완료된 거 읽은 여부 표시
     },{
-      readStatus: true
+      $set: {
+        readState: true
+      }
     });
   }
 

@@ -77,7 +77,7 @@ export class MessagesController {
   async cancelTodayMessage(@Res() res, @GetUser() user: Users) {
     try{
       const status = await this.messageService.cancelTodayMessage(user);
-      if(status == false)
+      if(!status)
         return res.status(HttpStatus.OK).json({
           message: '이미 상대가 쪽지를 읽었어요'
         })

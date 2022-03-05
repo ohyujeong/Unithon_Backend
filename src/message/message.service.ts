@@ -25,9 +25,10 @@ export class MessageService {
       const today = new Date();
       if(createdAt.toDateString() == today.toDateString()){ // 날짜가 같은 경우 readState 업뎃    
         await this.messageRepository.updateReadStatus(user, message); 
-        return true; 
+        return message;  // 읽은 여부 상태 변경
       }
     }
+    return false;
   }
 
   async getMessages(user: Users){
