@@ -24,7 +24,6 @@ export class UsersController {
     ): Promise<any> {
         try {
             const { nickname } = createUserDto;
-            console.log(createUserDto)
             const nicknameUser = await this.usersService.findByNickname(nickname);
             if(nicknameUser)
                 return res.
@@ -55,7 +54,6 @@ export class UsersController {
         @Res() res,
         @Body(ValidationPipe) loginUserDto: LoginUserDto
     ): Promise<any> {
-        // await this.usersService.signIn(loginUserDto);
         try{
             const { nickname } = loginUserDto;
             const accessToken = await this.usersService.signIn(loginUserDto);
