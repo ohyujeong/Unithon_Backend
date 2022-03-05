@@ -33,13 +33,31 @@ export class MessagesController {
     return this.messageService.saveTodayMessage(user, createMessageDto);
   }
 
-  @Patch()
+  @Patch('')
   @ApiOperation({ summary: '쪽지 전송' })
-  async updateTodayMessage(@GetUser() user: Users):Promise<String> {
+  async sendTodayMessage(@GetUser() user: Users):Promise<String> {
     return await this.messageService.sendTodayMessage(user);
   }
+  
+  @Patch('/cancel')
+  @ApiOperation({ summary: '쪽지 전송 취소' })
+  async cancelTodayMessage(@Res() res, @GetUser() user: Users) {
+    try{
+      const status = await this.messageService.cancelTodayMessage(user);
+      if(status == false)
+        return res.status(HttpStatus.OK).json({
+          message: '이미 상대가 쪽지를 읽었어요'
+        })
+      return res.status(HttpStatus.OK).json({
+          message: '쪽지 전송 취소'
+      })
+    } catch (error) {
+      this.logger.error('쪽지 전송 취소 ERROR' + error);
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(error);
+    }
+  }
 
-  @Get('')
+  @Get()
   @ApiOperation({ summary: '받은 쪽지 조회' })
   async getTodayMessage(@Res() res, @GetUser() user: Users) {
     try {
