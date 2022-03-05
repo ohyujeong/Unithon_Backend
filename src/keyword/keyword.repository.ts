@@ -3,7 +3,6 @@ import { KeyWord, KeyWordDocument } from './schemas/keyword.schema';
 import { Model } from 'mongoose';
 import { CreateKeyWordDto } from './dto/create-keyword.dto';
 import { Message, MessageDocument } from '../message/schemas/message.schema';
-import { CreateMessageDto } from '../message/dto/create-message.dto';
 import { Users, UsersDocument } from 'src/users/schemas/users.schema';
 
 export class KeyWordRepository {
