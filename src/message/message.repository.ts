@@ -27,7 +27,7 @@ export class MessageRepository {
   async updateReadStatus(user: Users, message: Message) {    
     return await this.MessageModel.updateOne({
       toUser: user._id, 
-      state:1, // 전송 완료되었지만 아직 읽지 않은 쪽지 조회
+      state:1, // 전송 완료된 거 읽은 여부 표시
     },{
       readStatus: true
     });
