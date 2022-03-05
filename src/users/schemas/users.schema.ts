@@ -18,7 +18,7 @@ export class Users {
   @Prop()
   generation: number; // z세대면 0, X세대면 1
 
-  @Prop()
+  @Prop({default:0})
   state: number; // 마니또 없으면(쪽지 없으면) 0, 마니또 있으면(쪽지 받았으면)1
 }
 
