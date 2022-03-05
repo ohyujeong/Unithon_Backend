@@ -14,6 +14,10 @@ export class MessageService {
     );
   }
 
+  async notSendMessage(user){
+    return await this.messageRepository.notSendMessage(user);
+  }
+
   async sendTodayMessage(user):Promise<String> {
     return await this.messageRepository.sendTodayMessage(user);
   }
