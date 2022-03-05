@@ -103,7 +103,7 @@ export class MessageRepository {
   async getNotReadMessage(user: Users) {
     return await this.MessageModel.findOneAndUpdate({
       fromUser: user._id,
-      readStatus: false,
+      readState: false,
       state: 1, // 전송 완료되었지만 아직 읽지 않은 쪽지 조회
     });
   }
