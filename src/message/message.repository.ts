@@ -97,4 +97,8 @@ export class MessageRepository {
   async getTodayMessage(user: Users): Promise<Message> {
     return await this.MessageModel.findOne({ toUser: user._id }); // 받는 사람이 로그인한 유저인 경우
   }
+
+  async getMessages(user: Users): Promise<Message[]> {
+    return await this.MessageModel.find({ toUser: user._id }); // 받는 사람이 로그인한 유저인 경우
+  }
 }
