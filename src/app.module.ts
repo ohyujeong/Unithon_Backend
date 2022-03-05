@@ -9,10 +9,13 @@ import { utilities as nestWinstonModuleUtilities, WinstonModule } from 'nest-win
 import * as winston from 'winston';
 import DailyRotateFile = require('winston-daily-rotate-file');
 const { combine, timestamp, printf } = winston.format;
+import { KeywordModule } from './keyword/keyword.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
+    ScheduleModule.forRoot(),
     MongooseModule.forRootAsync({
       useFactory: () => ({
         uri: `${process.env.DATABASE_URL}`,
@@ -49,6 +52,7 @@ const { combine, timestamp, printf } = winston.format;
         }),
       ],
     }),
+    KeywordModule,
   ],
   controllers: [AppController],
   providers: [AppService],
