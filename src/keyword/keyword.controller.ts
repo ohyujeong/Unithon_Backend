@@ -3,11 +3,9 @@ import { KeywordService } from './keyword.service';
 import { ApiOperation, ApiBody, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { CreateKeyWordDto } from './dto/create-keyword.dto';
 import { KeyWord } from './schemas/keyword.schema';
-import { Message } from './schemas/message.schema';
 import { GetUser } from 'src/users/get-user.decorator';
-import { CreateMessageDto } from './dto/create-message.dto';
 import { JwtAuthGuard } from 'src/users/jwt/jwt.guard';
-import { Users } from 'src/users/schema/users.schema';
+import { Users } from 'src/users/schemas/users.schema';
 
 @ApiBearerAuth('accessToken')
 @UseGuards(JwtAuthGuard)
@@ -34,14 +32,4 @@ export class KeywordController {
       const todayKeyWord = result[0]
       return res.json({todayKeyWord})
   }
-
-  @Post('/message/today')
-  async postTodayMessage(@GetUser() user:Users, @Body() createMessageDto: CreateMessageDto,): Promise<Message> {
-    return this.keywordService.saveTodayMessage(user, createMessageDto);
-  }
-
-//   @Get('/message/today')
-//   async getTodayMessage(): Promise<Message> {
-//     return this.keywordService.findTodayMessage();
-//   }
 }

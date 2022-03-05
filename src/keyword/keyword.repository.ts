@@ -2,9 +2,9 @@ import { InjectModel } from '@nestjs/mongoose';
 import { KeyWord, KeyWordDocument } from './schemas/keyword.schema';
 import { Model } from 'mongoose';
 import { CreateKeyWordDto } from './dto/create-keyword.dto';
-import { Message, MessageDocument } from './schemas/message.schema';
-import { CreateMessageDto } from './dto/create-message.dto';
-import { Users, UsersDocument } from 'src/users/schema/users.schema';
+import { Message, MessageDocument } from '../messages/schemas/message.schema';
+import { CreateMessageDto } from '../messages/dto/create-message.dto';
+import { Users, UsersDocument } from 'src/users/schemas/users.schema';
 
 export class KeyWordRepository {
   constructor(
@@ -66,54 +66,4 @@ export class KeyWordRepository {
     return result;
   }
   */
-
-  async saveTodayMessage(
-    user,
-    createMessageDto: CreateMessageDto,
-  ): Promise<Message> {
-    createMessageDto.fromUser = user._id
-
-    const today = new Date().toDateString();
-    const presentkeyWord = await this.KeyWordModel.findOne({
-      updateDay: today,
-    });
-    this.todayKeyWord = presentkeyWord;
-    createMessageDto.keyWord = this.todayKeyWord[0].content;
-    
-    if(user.generation == 0){
-      const toUser = await this.UsersModel.findOne({generation:1, state:0})
-      if(!toUser){
-        const message = await new this.MessageModel(createMessageDto);
-        return message.save();
-      }
-      else{
-        createMessageDto.toUser = toUser._id
-        createMessageDto.state = true
-        const message = await new this.MessageModel(createMessageDto);
-        return message.save();
-      }
-    }
-    else{
-      const toUser = await this.UsersModel.findOne({generation:0, state:0})
-      if(!toUser){
-        const message = await new this.MessageModel(createMessageDto);
-        return message.save();
-      }
-      else{
-        createMessageDto.toUser = toUser._id
-        createMessageDto.state = true
-        const message = await new this.MessageModel(createMessageDto);
-        return message.save();
-      }
-    }
-  }
-
-  //   async findTodayMessage(): Promise<Message> {
-  //     //함수 계속 껐다 켜서 만들어논 임시 변수(presentKeyWord)
-  //     const today = new Date().toDateString();
-  //     const presentkeyWord = await this.KeyWordModel.findOne({ updateDay: today });
-  //     this.todayKeyWord = presentkeyWord;
-
-  //     const todayMessage = await this.MessageMdoel.findOne({keyword:this.todayKeyWord, })
-  //   }
 }
