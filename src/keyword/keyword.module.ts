@@ -6,13 +6,21 @@ import { KeywordController } from './keyword.controller';
 import { KeyWordRepository } from './keyword.repository';
 import { Message, MessageSchema } from './schemas/message.schema';
 import { UsersModule } from 'src/users/users.module';
+import { PassportModule } from '@nestjs/passport';
+import { JwtModule } from '@nestjs/jwt';
+import { jwtConstants } from 'src/users/constants';
 import { Users, UsersSchema } from 'src/users/schema/users.schema';
-
 
 @Module({
   imports:[
     MongooseModule.forFeature([{ name: KeyWord.name, schema: KeyWordSchema }]),
     MongooseModule.forFeature([{ name: Message.name, schema: MessageSchema}]),
+    UsersModule,
+    PassportModule.register({ defaultStrategy: 'jwt' }),
+    JwtModule.register({
+      secret: jwtConstants.secret,
+      signOptions: { expiresIn: "60m" }
+    }),
     MongooseModule.forFeature([{ name: Users.name, schema: UsersSchema }]),
     UsersModule
   ],

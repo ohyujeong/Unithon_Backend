@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory, SchemaOptions } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import * as mongoose from 'mongoose';
-import { Users } from 'src/Users/schema/Users.schema';
+import { Users } from 'src/users/schema/users.schema';
 
 export type MessageDocument = Message & Document;
 

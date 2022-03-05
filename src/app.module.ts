@@ -1,15 +1,15 @@
-import { Module } from '@nestjs/common';
+import { Module, ValidationPipe } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import { VisitModule } from './visit/visit.module';
 import { KeywordModule } from './keyword/keyword.module';
-import { ScheduleModule } from '@nestjs/schedule';
 import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
 import { utilities as nestWinstonModuleUtilities, WinstonModule } from 'nest-winston';
 import * as winston from 'winston';
 import DailyRotateFile = require('winston-daily-rotate-file');
+import { ScheduleModule } from '@nestjs/schedule';
+import { APP_PIPE } from '@nestjs/core';
 const { combine, timestamp, printf } = winston.format;
 
 @Module({
@@ -21,7 +21,6 @@ const { combine, timestamp, printf } = winston.format;
         uri: `${process.env.DATABASE_URL}`,
       }),
     }),
-    VisitModule,
     UsersModule,
     KeywordModule,
     WinstonModule.forRoot({
@@ -55,6 +54,11 @@ const { combine, timestamp, printf } = winston.format;
     }),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService,
+    {
+      provide: APP_PIPE,
+      useClass: ValidationPipe
+    }
+  ],
 })
 export class AppModule {}

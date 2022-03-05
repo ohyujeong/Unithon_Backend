@@ -4,7 +4,7 @@ import { Model } from 'mongoose';
 import { CreateKeyWordDto } from './dto/create-keyword.dto';
 import { Message, MessageDocument } from './schemas/message.schema';
 import { CreateMessageDto } from './dto/create-message.dto';
-import { Users, UsersDocument } from 'src/Users/schema/Users.schema';
+import { Users, UsersDocument } from 'src/users/schema/users.schema';
 
 export class KeyWordRepository {
   constructor(
