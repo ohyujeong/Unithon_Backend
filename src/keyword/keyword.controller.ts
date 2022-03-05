@@ -5,9 +5,9 @@ import { CreateKeyWordDto } from './dto/create-keyword.dto';
 import { KeyWord } from './schemas/keyword.schema';
 import { Message } from './schemas/message.schema';
 import { GetUser } from 'src/users/get-user.decorator';
-import { Users } from 'src/Users/schema/Users.schema';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { JwtAuthGuard } from 'src/users/jwt/jwt.guard';
+import { Users } from 'src/users/schema/users.schema';
 
 @ApiBearerAuth('accessToken')
 @UseGuards(JwtAuthGuard)
