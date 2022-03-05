@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { CreateKeyWordDto } from './dto/create-keyword.dto';
 import { Message, MessageDocument } from './schemas/message.schema';
 import { CreateMessageDto } from './dto/create-message.dto';
+import { Users, UsersDocument } from 'src/Users/schema/Users.schema';
 
 export class KeyWordRepository {
   constructor(
@@ -11,6 +12,8 @@ export class KeyWordRepository {
     private KeyWordModel: Model<KeyWordDocument>,
     @InjectModel(Message.name)
     private MessageModel: Model<MessageDocument>,
+    @InjectModel(Users.name)
+    private UsersModel: Model<UsersDocument>,
   ) {}
   private todayKeyWord: KeyWord;
 
@@ -68,12 +71,41 @@ export class KeyWordRepository {
     user,
     createMessageDto: CreateMessageDto,
   ): Promise<Message> {
-    createMessageDto.fromUser = user.nickname;
-    createMessageDto.keyWord = this.todayKeyWord[0].content;
-    // createMessageDto.state = true;
+    createMessageDto.fromUser = user._id
 
-    const message = await new this.MessageModel(createMessageDto);
-    return message.save();
+    const today = new Date().toDateString();
+    const presentkeyWord = await this.KeyWordModel.findOne({
+      updateDay: today,
+    });
+    this.todayKeyWord = presentkeyWord;
+    createMessageDto.keyWord = this.todayKeyWord[0].content;
+    
+    if(user.generation == 0){
+      const toUser = await this.UsersModel.findOne({generation:1, state:0})
+      if(!toUser){
+        const message = await new this.MessageModel(createMessageDto);
+        return message.save();
+      }
+      else{
+        createMessageDto.toUser = toUser._id
+        createMessageDto.state = true
+        const message = await new this.MessageModel(createMessageDto);
+        return message.save();
+      }
+    }
+    else{
+      const toUser = await this.UsersModel.findOne({generation:0, state:0})
+      if(!toUser){
+        const message = await new this.MessageModel(createMessageDto);
+        return message.save();
+      }
+      else{
+        createMessageDto.toUser = toUser._id
+        createMessageDto.state = true
+        const message = await new this.MessageModel(createMessageDto);
+        return message.save();
+      }
+    }
   }
 
   //   async findTodayMessage(): Promise<Message> {

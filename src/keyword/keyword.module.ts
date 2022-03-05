@@ -9,7 +9,7 @@ import { UsersModule } from 'src/users/users.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from 'src/users/constants';
-
+import { Users, UsersSchema } from 'src/users/schema/users.schema';
 
 @Module({
   imports:[
@@ -21,6 +21,8 @@ import { jwtConstants } from 'src/users/constants';
       secret: jwtConstants.secret,
       signOptions: { expiresIn: "60m" }
     }),
+    MongooseModule.forFeature([{ name: Users.name, schema: UsersSchema }]),
+    UsersModule
   ],
   providers: [KeywordService, KeyWordRepository],
   controllers: [KeywordController],
