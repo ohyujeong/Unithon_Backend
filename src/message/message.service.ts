@@ -29,7 +29,7 @@ export class MessageService {
       const today = new Date();
 
       if(createdAt.toDateString() == today.toDateString()){ // 날짜가 같은 경우 삭제
-        await this.messageRepository.updateCancelState(user, message); 
+        await this.messageRepository.deleteMessage(user, message); 
         return true; // 안읽은 메시지가 있고 보내기 취소한 경우
       }
     }

@@ -86,12 +86,12 @@ export class MessageRepository {
     });
   }
 
-  async updateCancelState(user: Users, message: Message){
-    // 해당 쪽지를 삭제로 상태변경
-    await this.MessageModel.updateOne({
+  async deleteMessage(user: Users, message: Message){
+    // 해당 쪽지 삭제
+    await this.MessageModel.deleteOne({
       fromUser: user._id,
       _id: message._id
-    }, {state:2}); 
+    }); 
   }
 
   async getTodayMessage(user: Users): Promise<Message> {

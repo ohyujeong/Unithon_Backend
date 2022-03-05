@@ -82,6 +82,7 @@ export class Message {
     description: '작성 날짜',
   })
   createdAt: Date;
+  
   @ApiProperty({
     type: Date,
     description: '수정 날짜',
