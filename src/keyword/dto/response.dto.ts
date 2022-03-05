@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { KeyWord } from '../schemas/keyword.schema';
-import { Message } from 'src/messages/schemas/message.schema';
 
 export class GetMain {
     @ApiProperty({

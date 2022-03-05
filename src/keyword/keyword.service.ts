@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import { KeyWordRepository } from './keyword.repository';
 import { KeyWord } from './schemas/keyword.schema';
-import { Message } from '../messages/schemas/message.schema';
 
 @Injectable()
 export class KeywordService {

@@ -10,8 +10,8 @@ import * as winston from 'winston';
 import DailyRotateFile = require('winston-daily-rotate-file');
 import { ScheduleModule } from '@nestjs/schedule';
 import { APP_PIPE } from '@nestjs/core';
-import { MessagesModule } from './messages/messages.module';
-import { Message } from './messages/schemas/message.schema';
+import { MessagesModule } from './message/message.module';
+import { Message } from './message/schemas/message.schema';
 const { combine, timestamp, printf } = winston.format;
 
 @Module({
