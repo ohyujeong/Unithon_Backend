@@ -77,22 +77,21 @@ export class MessageRepository {
       updateDay: today,
     });
 
-
     const filter = {
       fromUser: user._id,
       keyWord: todayKeyWord.content,
       state: false,
-    };
-    const toUser = this.matchingUser(user);
+    }
+    const toUser = await this.matchingUser(user);
 
     if (toUser) {
       await this.MessageModel.findOneAndUpdate(filter, {
         $set: {
-          toUser: toUser[0]._id,
+          toUser: toUser._id,
           state: 1,
         },
       });
-      await this.UsersModel.findByIdAndUpdate(toUser[0]._id, {
+      await this.UsersModel.findByIdAndUpdate(toUser._id, {
         $set: {
           state: 1,
         },
