@@ -1,13 +1,16 @@
-import { Controller, Get, Res, Body, Post } from '@nestjs/common';
+import { Controller, Get, Res, Body, Post, UseGuards } from '@nestjs/common';
 import { KeywordService } from './keyword.service';
-import { ApiOperation, ApiBody, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiBody, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { CreateKeyWordDto } from './dto/create-keyword.dto';
 import { KeyWord } from './schemas/keyword.schema';
 import { Message } from './schemas/message.schema';
 import { GetUser } from 'src/users/get-user.decorator';
 import { Users } from 'src/Users/schema/Users.schema';
 import { CreateMessageDto } from './dto/create-message.dto';
+import { JwtAuthGuard } from 'src/users/jwt/jwt.guard';
 
+@ApiBearerAuth('accessToken')
+@UseGuards(JwtAuthGuard)
 @ApiTags('keyword')
 @Controller('keyword')
 export class KeywordController {
@@ -16,7 +19,7 @@ export class KeywordController {
   @Post()
   @ApiOperation({ 
     summary: '주제 DB 입력 (개발용)', 
-})
+  })
   addKeyWord(@Body() createKeyWordDto: CreateKeyWordDto): Promise<KeyWord> {
     return this.keywordService.addKeyWord(createKeyWordDto);
   }
@@ -24,7 +27,7 @@ export class KeywordController {
   @Get()
   @ApiOperation({ 
     summary: '오늘의 주제, 마니또 여부 조회', 
-})
+  })
   async getKeyWord(@GetUser() user:Users, @Res() res): Promise<any[]> {
       console.log(user)
       const result = await this.keywordService.findKeyWord();

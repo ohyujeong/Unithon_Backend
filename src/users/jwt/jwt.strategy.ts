@@ -3,28 +3,28 @@ import { PassportStrategy } from "@nestjs/passport";
 import { ExtractJwt, Strategy } from "passport-jwt";
 import { jwtConstants } from "../constants";
 import { Users } from "../schema/users.schema";
+import { UsersRepository } from "../users.repository";
+import { UsersService } from "../users.service";
 
-// 다른 곳에서도 주입해서 사용
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
     constructor(
+        private readonly usersService: UsersService
     ) {
         super({
-            // 토큰 유효한지 체크
             secretOrKey: jwtConstants.secret,
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken() 
-            // Header의 Token으로부터 JWT를 추출하고, SecretKey와 만료기간 설정
         })
     }
 
     async validate(payload) {
         const { nickname } = payload;
-        const user: Users = await this.usersRepository.findByNickname(nickname);
+        const user: Users = await this.usersService.findByNickname(nickname);
 
         if(!user) {
-            throw new UnauthorizedException('UnAuthrozized User');
+            throw new UnauthorizedException('UnAuthozized User');
         }
-
         return user;
     }
 }
+
