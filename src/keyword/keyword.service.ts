@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import { KeyWordRepository } from './keyword.repository';
 import { KeyWord } from './schemas/keyword.schema';
-import { Message } from '../messages/schemas/message.schema';
 
 @Injectable()
 export class KeywordService {
@@ -20,7 +19,12 @@ export class KeywordService {
     return this.keywordRepository.updateKeyWord();
   }
 
-  async findKeyWord(): Promise<any[]> {
-      return await this.keywordRepository.findKeyWord();
+  @Cron('0 0 0 * * *')
+  async resetMatch(): Promise<any> {
+    return this.keywordRepository.resetMatch();
+  }
+
+  async findKeyWord(user): Promise<any[]> {
+      return await this.keywordRepository.findKeyWord(user);
   }
 }

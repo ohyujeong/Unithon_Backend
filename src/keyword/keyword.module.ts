@@ -4,7 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { KeyWord, KeyWordSchema } from './schemas/keyword.schema';
 import { KeywordController } from './keyword.controller';
 import { KeyWordRepository } from './keyword.repository';
-import { Message, MessageSchema } from '../messages/schemas/message.schema';
+import { Message, MessageSchema } from '../message/schemas/message.schema';
 import { UsersModule } from 'src/users/users.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';

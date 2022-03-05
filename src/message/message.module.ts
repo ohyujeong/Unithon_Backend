@@ -1,7 +1,5 @@
 import { Module } from '@nestjs/common';
-import { MessagesService } from './messages.service';
-import { MessagesController } from './messages.controller';
-import { MessagesRepository } from './messages.repository';
+import { MessagesController } from './message.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Message, MessageSchema } from './schemas/message.schema';
 import { KeyWord, KeyWordSchema } from 'src/keyword/schemas/keyword.schema';
@@ -10,6 +8,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { jwtConstants } from 'src/users/constants';
 import { Users, UsersSchema } from 'src/users/schemas/users.schema';
+import { MessageService } from './message.service';
+import { MessageRepository } from './message.repository';
 
 @Module({
   imports:[
@@ -22,9 +22,8 @@ import { Users, UsersSchema } from 'src/users/schemas/users.schema';
       signOptions: { expiresIn: "60m" }
     }),
     MongooseModule.forFeature([{ name: Users.name, schema: UsersSchema }]),
-    UsersModule
   ],
-  providers: [MessagesService, MessagesRepository],
+  providers: [MessageService, MessageRepository],
   controllers: [MessagesController]
 })
 export class MessagesModule {}
