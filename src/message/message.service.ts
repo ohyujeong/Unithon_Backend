@@ -19,7 +19,19 @@ export class MessageService {
   }
 
   async getTodayMessage(user: Users) {
-    return await this.messageRepository.getTodayMessage(user);
+    const message = await this.messageRepository.getTodayMessage(user);
+    if(message){
+      const { createdAt } = message;
+      const today = new Date();
+      if(createdAt.toDateString() == today.toDateString()){ // 날짜가 같은 경우 readState 업뎃    
+        await this.messageRepository.updateReadStatus(user, message); 
+        return true; 
+      }
+    }
+  }
+
+  async getMessages(user: Users){
+    return await this.messageRepository.getMessages(user);
   }
 
   async cancelTodayMessage(user: Users): Promise<Boolean> {

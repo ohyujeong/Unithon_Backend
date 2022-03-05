@@ -45,7 +45,7 @@ export class MessagesController {
   @ApiOperation({ summary: '받은 모든 쪽지 조회' })
   async getMessages(@Res() res, @GetUser() user: Users) {
     try {
-      const messages = await this.messageService.getTodayMessage(user);
+      const messages = await this.messageService.getMessages(user);
       if (!messages)
         return res.status(HttpStatus.OK).json({
           message: '받은 쪽지가 없어요',

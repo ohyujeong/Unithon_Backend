@@ -17,6 +17,27 @@ export class MessageRepository {
   ) {}
   private todayKeyWord: KeyWord;
 
+  
+  async getTodayMessage(user: Users): Promise<Message> {
+    return await this.MessageModel.findOneAndUpdate({ 
+      toUser: user._id,
+    }); // 받는 사람이 로그인한 유저인 경우
+  }
+
+  async updateReadStatus(user: Users, message: Message) {    
+    return await this.MessageModel.updateOne({
+      toUser: user._id, 
+      state:1, // 전송 완료되었지만 아직 읽지 않은 쪽지 조회
+    },{
+      readStatus: true
+    });
+  }
+
+
+  async getMessages(user: Users): Promise<Message[]> {
+    return await this.MessageModel.find({ toUser: user._id }); // 받는 사람이 로그인한 유저인 경우
+  }
+
   async saveTodayMessage(
     user,
     createMessageDto: CreateMessageDto,
@@ -39,7 +60,6 @@ export class MessageRepository {
   }
 
   async sendTodayMessage(user):Promise<String> {
-
     const today = new Date().toDateString();
     const presentkeyWord = await this.KeyWordModel.findOne({
       updateDay: today,
@@ -53,7 +73,7 @@ export class MessageRepository {
         await this.MessageModel.findOneAndUpdate({fromUser:user._id, keyWord:this.todayKeyWord.content},{
           $set:{
             toUser: toUser._id,
-            state: 1
+            state: true
           }
         })
         return '전송 완료';
@@ -67,7 +87,7 @@ export class MessageRepository {
         await this.MessageModel.findOneAndUpdate({fromUser:user._id, keyWord:this.todayKeyWord.content},{
           $set:{
             toUser: toUser._id,
-            state: 1
+            state: true
           }
         })
         return '전송 완료';
@@ -79,7 +99,7 @@ export class MessageRepository {
   }
 
   async getNotReadMessage(user: Users) {    
-    return await this.MessageModel.findOneAndUpdate({
+    return await this.MessageModel.findOne({
       fromUser: user._id, 
       readStatus: false,
       state:1, // 전송 완료되었지만 아직 읽지 않은 쪽지 조회
@@ -92,13 +112,5 @@ export class MessageRepository {
       fromUser: user._id,
       _id: message._id
     }); 
-  }
-
-  async getTodayMessage(user: Users): Promise<Message> {
-    return await this.MessageModel.findOne({ toUser: user._id }); // 받는 사람이 로그인한 유저인 경우
-  }
-
-  async getMessages(user: Users): Promise<Message[]> {
-    return await this.MessageModel.find({ toUser: user._id }); // 받는 사람이 로그인한 유저인 경우
   }
 }
