@@ -3,6 +3,7 @@ import { Document } from 'mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import * as mongoose from 'mongoose';
 import { Users } from 'src/users/schemas/users.schema';
+import internal from 'stream';
 
 export type MessageDocument = Message & Document;
 
@@ -37,7 +38,7 @@ export class Message {
     type: mongoose.Schema.Types.ObjectId,
     description: '받는 사람',
     ref: 'Users',
-    defulat: null,
+    default: null,
   })
   toUser: Users;
 
@@ -59,12 +60,21 @@ export class Message {
 
   @ApiProperty({
     type: Boolean,
-    description: '임시저장 여부',
+    description: '전송 여부 / 0: 임시저장 1: 전송완료  2: 삭제',
+  })
+  @Prop({
+    default: 0
+  })
+  state: number;
+
+  @ApiProperty({
+    type: Boolean,
+    description: '받은 사람이 읽은지 여부',
   })
   @Prop({
     default: false,
   })
-  state: boolean;
+  readState: boolean;
 
   /* timestamps */
   @ApiProperty({
