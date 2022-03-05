@@ -71,4 +71,12 @@ export class KeyWordRepository {
     return result;
   }
   */
+
+  async resetMatch(): Promise<any> {
+    return await this.UsersModel.updateMany({
+      $set: {
+        state: 0,
+      },
+    });
+  }
 }
