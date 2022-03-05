@@ -14,7 +14,6 @@ export class MessageRepository {
     @InjectModel(Users.name)
     private UsersModel: Model<UsersDocument>,
   ) {}
-  private todayKeyWord: KeyWord;
 
   async saveTodayMessage(
     user,
@@ -23,15 +22,14 @@ export class MessageRepository {
     const content = createMessageDto.content;
 
     const today = new Date().toDateString();
-    const presentkeyWord = await this.KeyWordModel.findOne({
+    const todayKeyWord = await this.KeyWordModel.findOne({
       updateDay: today,
     });
-    this.todayKeyWord = presentkeyWord;
 
     const message = await new this.MessageModel({
       toUser: null,
       fromUser: user._id,
-      keyword: this.todayKeyWord.content,
+      keyword: todayKeyWord.content,
       content,
     });
     return message.save();
@@ -40,12 +38,11 @@ export class MessageRepository {
   async sendTodayMessage(user):Promise<String> {
 
     const today = new Date().toDateString();
-    const presentkeyWord = await this.KeyWordModel.findOne({
+    const todayKeyWord = await this.KeyWordModel.findOne({
       updateDay: today,
     });
-    this.todayKeyWord = presentkeyWord;
 
-    const filter = {fromUser:user._id, keyWord:this.todayKeyWord.content, state:false}
+    const filter = {fromUser:user._id, keyWord:todayKeyWord.content, state:false}
 
     if (user.generation == 0) {
       const toUser = await this.UsersModel.findOne({ generation: 1, state: 0 });
