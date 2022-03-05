@@ -4,6 +4,7 @@ import { Users, UsersDocument } from 'src/users/schemas/users.schema';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { Message, MessageDocument } from './schemas/message.schema';
 import { Model } from 'mongoose';
+import { createDeflate } from 'zlib';
 
 export class MessageRepository {
   constructor(
@@ -51,7 +52,7 @@ export class MessageRepository {
         await this.MessageModel.findOneAndUpdate(filter,{
           $set:{
             toUser: toUser._id,
-            state: true
+            state: 1
           }
         })
         await this.UsersModel.findByIdAndUpdate(toUser._id,{
@@ -70,7 +71,7 @@ export class MessageRepository {
         await this.MessageModel.findOneAndUpdate(filter,{
           $set:{
             toUser: toUser._id,
-            state: true
+            state: 1
           }
         })
         await this.UsersModel.findByIdAndUpdate(toUser._id,{
@@ -84,6 +85,22 @@ export class MessageRepository {
         return '매칭 대기';
       }
     }
+  }
+
+  async getNotReadMessage(user: Users) {    
+    return await this.MessageModel.findOneAndUpdate({
+      fromUser: user._id, 
+      readStatus: false,
+      state:1, // 전송 완료되었지만 아직 읽지 않은 쪽지 조회
+    });
+  }
+
+  async updateCancelState(user: Users, message: Message){
+    // 해당 쪽지를 삭제로 상태변경
+    await this.MessageModel.updateOne({
+      fromUser: user._id,
+      _id: message._id
+    }, {state:2}); 
   }
 
   async getTodayMessage(user: Users): Promise<Message> {
