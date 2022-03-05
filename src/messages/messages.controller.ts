@@ -4,7 +4,12 @@ import { Users } from 'src/users/schemas/users.schema';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { MessagesService } from './messages.service';
 import { Message } from './schemas/message.schema';
+import { UseGuards } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/users/jwt/jwt.guard';
 
+@ApiBearerAuth('accessToken')
+@UseGuards(JwtAuthGuard)
 @Controller('messages')
 export class MessagesController {
     constructor(private messagesService: MessagesService) {}
