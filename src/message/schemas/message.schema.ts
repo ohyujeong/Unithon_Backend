@@ -38,7 +38,7 @@ export class Message {
     type: mongoose.Schema.Types.ObjectId,
     description: '받는 사람',
     ref: 'Users',
-    defulat: null,
+    default: null,
   })
   toUser: Users;
 
