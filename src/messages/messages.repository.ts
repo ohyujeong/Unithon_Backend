@@ -28,7 +28,6 @@ export class MessagesRepository {
     });
     this.todayKeyWord = presentkeyWord;
 
-    console.log(user)
     if (user.generation == 0) {
       const toUser = await this.UsersModel.findOne({ generation: 1, state: 0 });
       if (!toUser) {

@@ -20,7 +20,7 @@ export class KeywordService {
     return this.keywordRepository.updateKeyWord();
   }
 
-  async findKeyWord(): Promise<any[]> {
-      return await this.keywordRepository.findKeyWord();
+  async findKeyWord(user): Promise<any[]> {
+      return await this.keywordRepository.findKeyWord(user);
   }
 }
