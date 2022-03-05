@@ -3,14 +3,14 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { VisitModule } from './visit/visit.module';
+import { KeywordModule } from './keyword/keyword.module';
+import { ScheduleModule } from '@nestjs/schedule';
 import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
 import { utilities as nestWinstonModuleUtilities, WinstonModule } from 'nest-winston';
 import * as winston from 'winston';
 import DailyRotateFile = require('winston-daily-rotate-file');
 const { combine, timestamp, printf } = winston.format;
-import { KeywordModule } from './keyword/keyword.module';
-import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -23,6 +23,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     }),
     VisitModule,
     UsersModule,
+    KeywordModule,
     WinstonModule.forRoot({
       transports: [
         new winston.transports.Console({
@@ -52,7 +53,6 @@ import { ScheduleModule } from '@nestjs/schedule';
         }),
       ],
     }),
-    KeywordModule,
   ],
   controllers: [AppController],
   providers: [AppService],

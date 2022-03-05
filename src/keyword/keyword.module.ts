@@ -4,16 +4,17 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { KeyWord, KeyWordSchema } from './schemas/keyword.schema';
 import { KeywordController } from './keyword.controller';
 import { KeyWordRepository } from './keyword.repository';
-import { SchedulerRegistry } from '@nestjs/schedule';
 import { Message, MessageSchema } from './schemas/message.schema';
+import { UsersModule } from 'src/users/users.module';
 
 
 @Module({
   imports:[
     MongooseModule.forFeature([{ name: KeyWord.name, schema: KeyWordSchema }]),
-    MongooseModule.forFeature([{ name: Message.name, schema: MessageSchema}])
+    MongooseModule.forFeature([{ name: Message.name, schema: MessageSchema}]),
+    UsersModule
   ],
-  providers: [KeywordService, KeyWordRepository, SchedulerRegistry],
+  providers: [KeywordService, KeyWordRepository],
   controllers: [KeywordController],
 })
 export class KeywordModule {}

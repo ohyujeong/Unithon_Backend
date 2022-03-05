@@ -7,7 +7,7 @@ import { Message } from './schemas/message.schema';
 @Injectable()
 export class KeywordService {
   constructor(
-    private keywordRepository: KeyWordRepository,
+    private readonly keywordRepository: KeyWordRepository,
   ) {}
 
   async addKeyWord(createKeyWordDto): Promise<KeyWord> {
@@ -22,6 +22,10 @@ export class KeywordService {
 
   async findKeyWord(): Promise<any[]> {
       return await this.keywordRepository.findKeyWord();
+  }
+
+  async saveTodayMessage(user, createMessageDto): Promise<Message> {
+    return await this.keywordRepository.saveTodayMessage(user, createMessageDto);
   }
 
 //   async findTodayMessage(): Promise<Message>{

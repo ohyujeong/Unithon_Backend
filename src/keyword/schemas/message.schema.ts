@@ -1,6 +1,8 @@
 import { Prop, Schema, SchemaFactory, SchemaOptions } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { ApiProperty } from '@nestjs/swagger';
+import * as mongoose from 'mongoose';
+import { Users } from 'src/Users/schema/Users.schema';
 
 export type MessageDocument = Message & Document;
 
@@ -16,27 +18,28 @@ export class Message {
   })
   _id;
 
-  //   @ApiProperty({
-//     type: [User],
-//     description: '보내는 사람',
-//   })
-//   @Prop({
-//     type: mongoose.Schema.Types.ObjectId,
-//     description: '보내는 사람',
-//     ref: 'User',
-//   })
-//   fromUser: User;
+  @ApiProperty({
+    type: [Users],
+    description: '보내는 사람(글쓴이)',
+  })
+  @Prop({
+    type: mongoose.Schema.Types.ObjectId,
+    description: '보내는 사람(글쓴이)',
+    ref: 'Users',
+  })
+  fromUser: Users;
 
-//   @ApiProperty({
-//     type: [User],
-//     description: '받는 사람',
-//   })
-//   @Prop({
-//     type: mongoose.Schema.Types.ObjectId,
-//     description: '받는 사람',
-//     ref: 'User',
-//   })
-//   toUser: User;
+  @ApiProperty({
+    type: [Users],
+    description: '받는 사람',
+  })
+  @Prop({
+    type: mongoose.Schema.Types.ObjectId,
+    description: '받는 사람',
+    ref: 'Users',
+    defulat: null,
+  })
+  toUser: Users;
 
   @ApiProperty({
     type: String,
@@ -53,6 +56,15 @@ export class Message {
     default: null,
   })
   keyword: string;
+
+  @ApiProperty({
+    type: Boolean,
+    description: '임시저장 여부',
+  })
+  @Prop({
+    default: false,
+  })
+  state: boolean;
 
   /* timestamps */
   @ApiProperty({
