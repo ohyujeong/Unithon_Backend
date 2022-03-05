@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
-import { KeywordService } from './keyword.service';
+import { MessagesService } from './messages.service';
+import { MessagesController } from './messages.controller';
+import { MessagesRepository } from './messages.repository';
 import { MongooseModule } from '@nestjs/mongoose';
-import { KeyWord, KeyWordSchema } from './schemas/keyword.schema';
-import { KeywordController } from './keyword.controller';
-import { KeyWordRepository } from './keyword.repository';
-import { Message, MessageSchema } from '../messages/schemas/message.schema';
+import { Message, MessageSchema } from './schemas/message.schema';
+import { KeyWord, KeyWordSchema } from 'src/keyword/schemas/keyword.schema';
 import { UsersModule } from 'src/users/users.module';
-import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
+import { PassportModule } from '@nestjs/passport';
 import { jwtConstants } from 'src/users/constants';
 import { Users, UsersSchema } from 'src/users/schemas/users.schema';
 
@@ -24,7 +24,7 @@ import { Users, UsersSchema } from 'src/users/schemas/users.schema';
     MongooseModule.forFeature([{ name: Users.name, schema: UsersSchema }]),
     UsersModule
   ],
-  providers: [KeywordService, KeyWordRepository],
-  controllers: [KeywordController],
+  providers: [MessagesService, MessagesRepository],
+  controllers: [MessagesController]
 })
-export class KeywordModule {}
+export class MessagesModule {}
