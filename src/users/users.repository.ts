@@ -4,7 +4,6 @@ import { Users, UsersDocument } from "./schemas/users.schema";
 import { CreateUserDto } from './dto/create-user.dto';
 import { bcryptConstant } from './constants';
 import * as bcrypt from 'bcrypt';
-import { LoginUserDto } from './dto/login-user.dto';
 
 export class UsersRepository {
     constructor(
@@ -22,12 +21,6 @@ export class UsersRepository {
         }
         const newUser = new this.userModel(user);
         return await newUser.save();
-        // 유저를 저장하고 
-    }
-
-    async loginUser(loginUserDto: LoginUserDto){
-        const { nickname, password } = loginUserDto;
-        
     }
 
     async findByNickname(nickname: string){
