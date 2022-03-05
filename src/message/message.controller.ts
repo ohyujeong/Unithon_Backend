@@ -16,14 +16,11 @@ export class MessagesController {
     logger: any;
     constructor(private messageService: MessageService) {}
 
-
     @Post('/message/today')
     @ApiOperation({ summary: '쪽지 전송' })
     async postTodayMessage(@GetUser() user:Users, @Body() createMessageDto: CreateMessageDto,): Promise<Message> {
-      console.log(user)
       return this.messageService.saveTodayMessage(user, createMessageDto);
     }
-  
 
     @Get('')
     @ApiOperation({ summary: '받은 쪽지 조회' })

@@ -19,7 +19,12 @@ export class KeywordService {
     return this.keywordRepository.updateKeyWord();
   }
 
-  async findKeyWord(): Promise<any[]> {
-      return await this.keywordRepository.findKeyWord();
+  @Cron('0 0 0 * * *')
+  async resetMatch(): Promise<any> {
+    return this.keywordRepository.resetMatch();
+  }
+
+  async findKeyWord(user): Promise<any[]> {
+      return await this.keywordRepository.findKeyWord(user);
   }
 }
