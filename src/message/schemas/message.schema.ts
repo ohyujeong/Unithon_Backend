@@ -60,10 +60,10 @@ export class Message {
 
   @ApiProperty({
     type: Boolean,
-    description: '전송 여부 / 0: 임시저장 1: 전송완료  2: 삭제',
+    description: '전송 여부 / true: 전송완료, false: 임시저장',
   })
   @Prop({
-    default: 0
+    default: false
   })
   state: number;
 
@@ -82,6 +82,7 @@ export class Message {
     description: '작성 날짜',
   })
   createdAt: Date;
+
   @ApiProperty({
     type: Date,
     description: '수정 날짜',

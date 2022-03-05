@@ -16,12 +16,31 @@ export class MessageRepository {
     private UsersModel: Model<UsersDocument>,
   ) {}
 
+  
+  async getTodayMessage(user: Users): Promise<Message> {
+    return await this.MessageModel.findOne({ toUser: user._id }); // 받는 사람이 로그인한 유저인 경우
+  }
+
+  async updateReadStatus(user: Users, message: Message) {    
+    return await this.MessageModel.findOneAndUpdate({
+      toUser: user._id, 
+      state:1, // 전송 완료된 거 읽은 여부 표시
+    },{
+      $set: {
+        readState: true
+      }
+    });
+  }
+
+  async getMessages(user: Users): Promise<Message[]> {
+    return await this.MessageModel.find({ toUser: user._id }); // 받는 사람이 로그인한 유저인 경우
+  }
+
   async saveTodayMessage(
     user,
     createMessageDto: CreateMessageDto,
   ): Promise<Message> {
     const content = createMessageDto.content;
-
     const today = new Date().toDateString();
     const todayKeyWord = await this.KeyWordModel.findOne({
       updateDay: today,
@@ -53,6 +72,7 @@ export class MessageRepository {
     const todayKeyWord = await this.KeyWordModel.findOne({
       updateDay: today,
     });
+
 
     const filter = {
       fromUser: user._id,
@@ -88,18 +108,11 @@ export class MessageRepository {
     });
   }
 
-  async updateCancelState(user: Users, message: Message) {
-    // 해당 쪽지를 삭제로 상태변경
-    await this.MessageModel.updateOne(
-      {
-        fromUser: user._id,
-        _id: message._id,
-      },
-      { state: 2 },
-    );
-  }
-
-  async getTodayMessage(user: Users): Promise<Message> {
-    return await this.MessageModel.findOne({ toUser: user._id }); // 받는 사람이 로그인한 유저인 경우
+  async deleteMessage(user: Users, message: Message){
+    // 해당 쪽지 삭제
+    await this.MessageModel.deleteOne({
+      fromUser: user._id,
+      _id: message._id
+    });
   }
 }
