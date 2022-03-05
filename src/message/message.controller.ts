@@ -29,14 +29,35 @@ export class MessagesController {
   async postTodayMessage(
     @GetUser() user: Users,
     @Body() createMessageDto: CreateMessageDto,
+    @Res() res
   ): Promise<Message> {
-    return this.messageService.saveTodayMessage(user, createMessageDto);
+    try{
+      const message = await this.messageService.saveTodayMessage(user, createMessageDto);
+      return res.status(HttpStatus.OK).json(message)
+    }
+    catch(error){
+      this.logger.error('쪽지 저장 ERROR' + error);
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(error);
+    }
   }
 
-  @Patch('')
+  @Patch()
   @ApiOperation({ summary: '쪽지 전송' })
-  async sendTodayMessage(@GetUser() user: Users):Promise<String> {
-    return await this.messageService.sendTodayMessage(user);
+  async sendTodayMessage(@GetUser() user: Users, @Res() res):Promise<String> {
+    try{
+      const notSendMessage = await this.messageService.notSendMessage(user)
+      if(notSendMessage){
+        const message = await this.messageService.sendTodayMessage(user)
+        return res.status(HttpStatus.OK).json(message)
+      }
+      else{
+        return res.status(HttpStatus.OK).json('이미 쪽지를 보냈습니다.')
+      }
+    }
+    catch(error){
+      this.logger.error('쪽지 전송 ERROR' + error);
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(error);
+    }
   }
   
   @Patch('/cancel')
