@@ -45,14 +45,21 @@ export class MessageRepository {
     });
     this.todayKeyWord = presentkeyWord;
 
+    const filter = {fromUser:user._id, keyWord:this.todayKeyWord.content, state:false}
+
     if (user.generation == 0) {
       const toUser = await this.UsersModel.findOne({ generation: 1, state: 0 });
       if(toUser) {
         //매칭 완료
-        await this.MessageModel.findOneAndUpdate({fromUser:user._id, keyWord:this.todayKeyWord.content},{
+        await this.MessageModel.findOneAndUpdate(filter,{
           $set:{
             toUser: toUser._id,
             state: true
+          }
+        })
+        await this.UsersModel.findByIdAndUpdate(toUser._id,{
+          $set:{
+            state:1
           }
         })
         return '전송 완료';
@@ -63,10 +70,15 @@ export class MessageRepository {
     } else {
       const toUser = await this.UsersModel.findOne({ generation: 0, state: 0 });
       if (toUser) {
-        await this.MessageModel.findOneAndUpdate({fromUser:user._id, keyWord:this.todayKeyWord.content},{
+        await this.MessageModel.findOneAndUpdate(filter,{
           $set:{
             toUser: toUser._id,
             state: true
+          }
+        })
+        await this.UsersModel.findByIdAndUpdate(toUser._id,{
+          $set:{
+            state:1
           }
         })
         return '전송 완료';
