@@ -3,6 +3,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { VisitModule } from './visit/visit.module';
+import { KeywordModule } from './keyword/keyword.module';
+import { ScheduleModule } from '@nestjs/schedule';
 import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
 import { utilities as nestWinstonModuleUtilities, WinstonModule } from 'nest-winston';
@@ -13,6 +15,7 @@ const { combine, timestamp, printf } = winston.format;
 @Module({
   imports: [
     ConfigModule.forRoot(),
+    ScheduleModule.forRoot(),
     MongooseModule.forRootAsync({
       useFactory: () => ({
         uri: `${process.env.DATABASE_URL}`,
@@ -20,6 +23,7 @@ const { combine, timestamp, printf } = winston.format;
     }),
     VisitModule,
     UsersModule,
+    KeywordModule,
     WinstonModule.forRoot({
       transports: [
         new winston.transports.Console({
