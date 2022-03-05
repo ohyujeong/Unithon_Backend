@@ -48,7 +48,7 @@ export class UsersController {
     @Post('/signin')
     @ApiOperation({ 
         summary: '로그인 API', 
-        description: '닉네임, 비밀번호, 세대 입력'
+        description: '닉네임, 비밀번호 입력'
     })
     @ApiBody({ type: LoginUserDto })
     async signIn(
