@@ -14,6 +14,10 @@ export class MessageService {
     );
   }
 
+  async findMyMessage(user):Promise<Message>{
+    return await this.messageRepository.findMyMessage(user)
+  }
+
   async notSendMessage(user){
     return await this.messageRepository.notSendMessage(user);
   }

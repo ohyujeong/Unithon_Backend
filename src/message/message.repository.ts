@@ -55,6 +55,10 @@ export class MessageRepository {
     return message.save();
   }
 
+  async findMyMessage(user):Promise<Message>{
+    return await this.MessageModel.findOne({fromUser:user._id})
+  }
+
   async notSendMessage(user): Promise<Message> {
     return await this.MessageModel.findOne({ fromUser: user._id, state: 0 });
   }

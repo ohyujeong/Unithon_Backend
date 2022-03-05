@@ -74,6 +74,18 @@ export class MessagesController {
     }
   }
 
+  @Get('/my-message')
+  @ApiOperation({ summary: '내가 작성한 쪽지 조회' })
+  async getMyMessage(@GetUser() user:Users, @Res() res): Promise<Message>{
+    try{
+      const myMessage = await this.messageService.findMyMessage(user);
+      return res.status(HttpStatus.OK).json(myMessage)
+    }catch(error){
+      this.logger.error('내가 작성한 쪽지 ERROR' + error);
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(error);
+    }
+  }
+
   @Patch()
   @ApiOperation({ summary: '쪽지 전송' })
   async sendTodayMessage(@GetUser() user: Users, @Res() res):Promise<String> {
