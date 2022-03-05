@@ -17,7 +17,6 @@ export class MessagesController {
 
     @Post('/message/today')
     async postTodayMessage(@GetUser() user:Users, @Body() createMessageDto: CreateMessageDto,): Promise<Message> {
-      console.log(user)
       return this.messagesService.saveTodayMessage(user, createMessageDto);
     }
   

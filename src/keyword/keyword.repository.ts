@@ -42,7 +42,7 @@ export class KeyWordRepository {
   }
 
   //개발용 함수 (서버 계속 껐다 키니까 presenetKeyWord 변수 만들어서 임시적으로 오늘의 키워드 저장해주고 보여줌)
-  async findKeyWord(): Promise<any[]> {
+  async findKeyWord(user): Promise<any[]> {
     const today = new Date().toDateString();
     let result: any[] = [];
     const presentkeyWord = await this.KeyWordModel.findOne({
@@ -50,10 +50,15 @@ export class KeyWordRepository {
     });
     this.todayKeyWord = presentkeyWord;
     result.push(this.todayKeyWord);
-    /*유저에게 오늘 쪽지 왔는지 여부 확인
-    const message = await this.KeyWordModel.findOne({keyWord:this.todayKeyWord, toUser:user.nickname})
+    const message = await this.MessageModel.findOne({keyWord:this.todayKeyWord.content, toUser:user._id})
+    if(message){
+      await this.UsersModel.findByIdAndUpdate(user._id,{
+        $set:{
+          state:1
+        }
+      })
+    }
     result.push(message)
-    */
     return result;
   }
 
