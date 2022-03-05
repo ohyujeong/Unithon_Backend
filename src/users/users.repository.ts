@@ -22,6 +22,7 @@ export class UsersRepository {
         }
         const newUser = new this.userModel(user);
         return await newUser.save();
+        // 유저를 저장하고 
     }
 
     async loginUser(loginUserDto: LoginUserDto){
