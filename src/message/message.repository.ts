@@ -5,7 +5,7 @@ import { CreateMessageDto } from './dto/create-message.dto';
 import { Message, MessageDocument } from './schemas/message.schema';
 import { Model } from 'mongoose';
 
-export class MessagesRepository {
+export class MessageRepository {
   constructor(
     @InjectModel(KeyWord.name)
     private KeyWordModel: Model<KeyWordDocument>,
@@ -71,7 +71,7 @@ export class MessagesRepository {
     }
   }
 
-  // async getTodayMessage(user: Users): Promise<Message> {
-  //    const { _id } = user;
-  // }
+  async getTodayMessage(user: Users): Promise<Message> {
+      return await this.MessageModel.findOne({toUser: user._id}) // 받는 사람이 로그인한 유저인 경우
+  }
 }
